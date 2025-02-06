@@ -1,0 +1,89 @@
+A. INTRODUCTION :
+
+Ce projet consiste à réaliser un mini-jeu inspiré de ketchapp circle  ou l'on on un cercle dans une 
+fenetre et on esseai de le maintenir visible dans cette fenetre en cliqant sur l'ecran ,
+by doing so , le cercle fera un saut vers le haut et decsendera une fois atteint 
+sa hauteur maximale 
+le but du projet ou du jeu , est de se familiariser un tout petit peu avec les 
+interfaces graphiques java et les threads ( programmation concurrentielle)
+meme si cette derniere n'est pas vraiment pronencée dans ce projet 
+mais c'est un bon début . 
+
+le projet est conçu à 100% avec JAVA .
+
+mettre ici une capture du jeu . 
+
+B. ANALYSE GLOBALE :
+
+dans un tableau :
+fonctionnalité       ;difficulté      ;priorité 
+1/dessiner un ovale dans une fenetre graphique ; difficulte basse; priorite 3
+2/faire monter l’ovale lorsqu’on clique; difficulte moyenne; priorite 1
+3/faire descendre l’ovale lorsqu’on ne clique pas; difficulte basse; priorite 1
+4/utiliser une vitesse pour creer un mouvement de saut; difficulte moyenne; priorite 2
+
+
+C. PLAN DE DEVLOPPEMENT :
+
+diagramme de gantt ici ( j'ai une image )
+
+D. CONCEPTION GENERALE :
+
+image MVC 
+
+D.1 / CONCEPTION DETAILLEE :
+
+--> Dessin de l'ovale 
+° utilisation de l'API Swing et de la classe JPanel 
+° Définition des dimensions :
+    LARGEUR_ECRAN = 700
+    HAUTEUR_ECRAN = 500 
+
+    OVAL_HEIGHT = 50 
+    OVAL_WIDTH = 10 
+
+° diagramme de classe : diagrammeDeClasse_1 
+
+--> Clic souris :
+° Programmation evenementielle avec la classe MouseListener
+° Hauteur definie dans une constante :
+    HAUTEUR = 10 
+° Thread de mise à jour de l’affichage Délai 50ms dans une constante
+    DELAY = 50 
+
+dans la fonction run : Thread.sleep(DELAY);
+
+
+photo 2
+--> Chute de l'ovale :
+
+DIAGRAMME DECLASSE3
+
+
+E . Résultat :
+
+copies d'écran ;
+
+F . Documentation utilisateur :
+
+== Prérequis : Java avec un IDE
+(ou Java tout seul si vous avez fait un export en .jar ex´ecutable)
+== Mode d’emploi (cas IDE) : Importez le projet dans votre IDE,
+sélectionnez la classe Main `a la racine du projet puis cliquez
+sur l’icˆone ≪ Run ≫.
+== Mode d’emploi (cas .jar ex´ecutable) : double-cliquez sur
+l’icˆone du fichier .jar
+== Cliquez sur la fenˆetre pour faire monter l’ovale.
+
+G . Doc dev :
+
+la classe principale : Main 
+les packages : le projet est beaucoup trop simple , donc pas de packages pour l'instant . 
+les constante sont définie dans la classe AFFICHAGE 
+Prochaines étapes : 
+    - la génération de la ligne brisée ... 
+
+H . CONCLUSION ET PERSPECTIVES :
+
+j'ai fait un boulot respectable , j'aimerais maintenant dévlopper plus le projet et faire quelque chose de plus intérressant en intégrat des packages 
+et complexifier tout ça , et faire beaucoup de java car j'ai un stage en fin d'année ( mai ) I AM FLIPPING OUT ! 
