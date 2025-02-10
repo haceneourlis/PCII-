@@ -67,10 +67,15 @@ public class Affichage extends JPanel implements KeyListener {
 
     /* affichage de points */
     private void draw_points(Graphics g) {
-        for (Point point : parcours.get_liste_points()) {
-            /* afficher des points rond avec une vouleur rouge */
-            g.setColor(Color.RED);
-            g.fillOval(point.x * RATIO_X, HAUTEUR_ECRAN - point.y * RATIO_Y, 5, 5);
+
+        synchronized (parcours) { // bloquer le thread parcours pour éviter les problèmes de concurrence
+            // si je fais pas ça , le thread parcours peut modifier la liste des points
+            // pendant que je suis en train de la parcourir
+            for (Point point : parcours.get_liste_points()) {
+                /* afficher des points rond avec une vouleur rouge */
+                g.setColor(Color.RED);
+                g.fillOval(point.x * RATIO_X, HAUTEUR_ECRAN - point.y * RATIO_Y, 5, 5);
+            }
         }
     }
 
@@ -119,7 +124,7 @@ public class Affichage extends JPanel implements KeyListener {
                     pauseMenuController.showPauseMenu();
                 } else {
                     pauseMenuController.hidePauseMenu();
-                    this.notifyAll(); // Resume all paused threads
+                    this.notifyAll(); // le gamepanel dit à tous les threads de continuer
                 }
             }
             repaint();

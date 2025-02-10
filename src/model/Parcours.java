@@ -19,7 +19,17 @@ public class Parcours {
     private static final int ECARTMAX = 30;
 
     private Position position;
-    private ArrayList<Point> listePoints = new ArrayList<Point>();
+    private ArrayList<Point> listePoints;
+
+    public Parcours() {
+        listePoints = new ArrayList<Point>();
+        generer_points();
+    }
+
+    /* set the position */
+    public void set_position(Position position) {
+        this.position = position;
+    }
 
     /*
      * créer une méthode qui va générer une liste de points
@@ -40,8 +50,17 @@ public class Parcours {
         }
     }
 
-    /* une méthode qui met à jour le parcours */
-    public void ligne_continue() {
+    /*
+     * Met à jour la position des points du parcours tout en gérant la concurrence
+     * entre les threads.
+     * Cette méthode est synchronisée pour éviter les conflits lorsque plusieurs
+     * threads accèdent
+     * simultanément à la liste des points.
+     */
+    public synchronized void update_ligne() {
+        for (Point point : listePoints) {
+            point.x -= position.avancement;
+        }
         // Supprimer le premier point s'il sort de l'écran
         if (listePoints.size() > 1 && listePoints.get(1).x - position.avancement < 0) {
             listePoints.remove(1);
@@ -56,16 +75,6 @@ public class Parcours {
         }
     }
 
-    /* constructeur */
-    public Parcours() {
-        generer_points();
-    }
-
-    /* set the position */
-    public void set_position(Position position) {
-        this.position = position;
-    }
-
     /*
      * une méthode getter , qui renvoie la liste des points en décalant la position
      * de
@@ -73,11 +82,27 @@ public class Parcours {
      * l'ovale
      */
     public ArrayList<Point> get_liste_points() {
-        ArrayList<Point> liste_points_decale = new ArrayList<Point>();
-        for (Point point : listePoints) {
-            liste_points_decale.add(new Point(point.x - position.avancement, point.y));
+        ArrayList<Point> listePoints = new ArrayList<Point>();
+        for (Point point : this.listePoints) {
+            listePoints.add(new Point(point.x - position.avancement, point.y));
         }
-        return liste_points_decale;
+        // System.out.println("it was supposed to work then ?");
+        return listePoints;
+
     }
 
 }
+
+/**
+ * COMMENTAIRE IMPORTANT :
+ * j'ai fait ça , et j'ai eu une erreu du type : ConcurrentModificationException
+ * parce que un thread ( position ) est entrain de modifier la liste des points
+ * et un autre thread ( affichage ) est entrain de la parcourir
+ * 
+ * donc j'ai refait la méthode en creant une copie de la liste .
+ */
+// public ArrayList<Point> get_liste_points() {
+// for (Point point : listePoints) {
+// point.x -= position.avancement;
+// }
+// return listePoints;

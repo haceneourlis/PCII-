@@ -20,6 +20,7 @@ public class Main {
     Position pp = new Position(parcours);
     parcours.set_position(pp);
     Affichage GamePanel = new Affichage(pp, parcours);
+    pp.setGamePanel(GamePanel);
     ReactionClic rc = new ReactionClic(pp);
 
     /* lancer les thread */

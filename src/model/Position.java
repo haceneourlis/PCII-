@@ -11,9 +11,16 @@ public class Position extends Thread {
     public static final int HAUTEUR_MAX = 50;
 
     private Parcours parcouuuurs;
+    private Affichage GamePanel; // mon affichage
 
     public Position(Parcours parcours) {
         this.parcouuuurs = parcours;
+
+    }
+
+    // setter pour le GamePanel ( Affichage ) : TRES IMPORTANT
+    public void setGamePanel(Affichage GamePanel) {
+        this.GamePanel = GamePanel;
     }
 
     public static final int IMPULSION = 10;
@@ -39,29 +46,39 @@ public class Position extends Thread {
 
     @Override
     public void run() {
+        // Boucle infinie pour faire fonctionner le thread en continu
         while (true) {
-            synchronized (this) { // pause le thread Position
-                while (Affichage.PAUSE) { // si le jeu est en pause
-
+            // Bloque l'accès à GamePanel pour éviter les conflits avec d'autres threads
+            synchronized (GamePanel) {
+                // Tant que le jeu est en pause, le thread attend
+                while (Affichage.PAUSE) {
                     try {
-                        wait(); // attendre la fin de la pause pour continuer
+                        // Met en pause ce thread jusqu'à ce que GamePanel le réveille
+                        // c'est important d'ecrire GamePanel.wait() et non pas this.wait()
+                        // car on veut que le thread Position soit en pause et le thread qui le reveille
+                        // est bien GamePanel
+                        GamePanel.wait();
                     } catch (InterruptedException e) {
+                        // Affiche l'erreur si le thread est interrompu
                         e.printStackTrace();
                     }
                 }
             }
 
             try {
+                // Pause de 100ms pour ralentir la mise à jour du jeu
                 Thread.sleep(100);
-                // avancement += 1;
 
-                // if (avancement > 10) {
-                // avancement = 1;
-                // }
-                parcouuuurs.ligne_continue();
+                // Vérifie que ce bloc de code est bien exécuté
+                System.out.println(" so you do enter this block ( Position ) ? ");
+
+                // Met à jour la position des objets dans le jeu
+                parcouuuurs.update_ligne();
             } catch (Exception e) {
+                // Affiche toute erreur qui pourrait survenir
                 e.printStackTrace();
             }
         }
     }
+
 }
