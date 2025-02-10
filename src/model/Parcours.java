@@ -34,8 +34,8 @@ public class Parcours {
         int x = XDEPART + ECARTMIN;
 
         while (x <= XMAX) {
-            x += rand.nextInt(ECARTMAX - ECARTMIN) + ECARTMIN;
-            int y = rand.nextInt(YMAX - YMIN) + YMIN;
+            x += rand.nextInt(ECARTMAX - ECARTMIN);
+            int y = rand.nextInt(YMAX - YMIN);
             listePoints.add(new Point(x, y));
         }
     }
@@ -50,8 +50,8 @@ public class Parcours {
         // Ajouter un nouveau point si le dernier est proche de l'horizon
         Point dernierPoint = listePoints.get(listePoints.size() - 1);
         if (dernierPoint.x - position.avancement < Position.AFTER) {
-            int x = dernierPoint.x + rand.nextInt(ECARTMAX - ECARTMIN) + ECARTMIN;
-            int y = rand.nextInt(YMAX - YMIN) + YMIN;
+            int x = dernierPoint.x + rand.nextInt(ECARTMAX - ECARTMIN);
+            int y = rand.nextInt(YMAX - YMIN);
             listePoints.add(new Point(x, y));
         }
     }

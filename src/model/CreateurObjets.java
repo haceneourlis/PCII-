@@ -2,7 +2,7 @@ package model;
 
 import java.util.Random;
 
-import view.affichage;
+import view.Affichage;
 
 public class CreateurObjets {
 
@@ -16,14 +16,15 @@ public class CreateurObjets {
     public CreateurObjets(Position position) {
         this.position = position;
         for (int i = 0; i < objets.length; i++) {
-            objets[i] = new ObjetDetectable(); // Ensure each object is instantiated
+            objets[i] = new ObjetDetectable();
         }
         hacene = new Character();
     }
 
+    /* créer les objets initiaux */
     public void setObjects() {
         for (int i = 0; i < 10; i++) {
-            objets[i].setXpos(affichage.LARGEUR_ECRAN + RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
+            objets[i].setXpos(Affichage.LARGEUR_ECRAN + RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
             objets[i].setYpos(RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
             if (i % 2 == 0) {
                 objets[i].setImage("/model/images/coins.png");
@@ -33,27 +34,28 @@ public class CreateurObjets {
             }
         }
 
-        hacene.setXpos(affichage.POSITION_EN_X);
-    }
-
-    public ObjetDetectable getMario() {
-        return hacene;
+        hacene.setXpos(Affichage.POSITION_EN_X);
     }
 
     public ObjetDetectable[] getObjets() {
-        /*
-         * for loop on the array objets and set the X position to : objet.getXpos -
-         * avancement
-         */
-
         for (ObjetDetectable o : objets) {
-            o.setXpos(o.getXpos() - position.avancement / 2);
+            o.setXpos(o.getXpos() - position.avancement);
         }
         return objets;
     }
 
-    public Character getMarioObjet() {
-        return (Character) hacene;
+    /* I need to keep them coming though ! */
+    public void creer_new_objets() {
+        for (int i = 0; i < 10; i++) {
+            if (objets[i].getXpos() < Position.BEFORE) {
+                objets[i].setXpos(Affichage.LARGEUR_ECRAN + RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
+                objets[i].setYpos(RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
+                if (i % 2 == 0) {
+                    objets[i].setImage("/model/images/coins.png");
+                } else {
+                    objets[i].setImage("/model/images/Fruits.png");
+                }
+            }
+        }
     }
-
 }

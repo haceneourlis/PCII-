@@ -4,10 +4,10 @@ import javax.swing.*;
 
 import controller.ReactionClic;
 import model.Descendre;
+import model.DetectionCollision;
 import model.Parcours;
 import model.Position;
-import view.DetectionCollision;
-import view.affichage;
+import view.Affichage;
 
 /** La classe principale de ce projet */
 public class Main {
@@ -19,16 +19,19 @@ public class Main {
     Parcours parcours = new Parcours();
     Position pp = new Position(parcours);
     parcours.set_position(pp);
-
-    affichage toto = new affichage(pp, parcours);
+    Affichage GamePanel = new Affichage(pp, parcours);
     ReactionClic rc = new ReactionClic(pp);
 
-    (new Descendre(pp)).start(); // le 2 eme thread est la
-    pp.start(); // le 3eme thread
-    (new DetectionCollision(toto, toto.cb.hacene)).start(); // le 4eme thread
+    /* lancer les thread */
+    (new Descendre(pp, GamePanel)).start(); // le 2 eme thread est la : pour faire descendre le personnage ( GRAVIITE )
+    // le 3eme thread : pour faire avancer le personnage ( avancer la ligne de
+    // parcours )
+    pp.start();
+    // le 4eme thread : pour detecter les collisions ( Classe Rectangle )
+    (new DetectionCollision(GamePanel, GamePanel.cb.hacene)).start();
 
-    toto.addMouseListener(rc);
-    maFenetre.add(toto);
+    GamePanel.addMouseListener(rc);
+    maFenetre.add(GamePanel);
 
     maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     maFenetre.pack();

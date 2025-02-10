@@ -1,30 +1,33 @@
-package view;
-
-import model.Position;
+package model;
 
 import java.awt.Graphics2D;
-
-import model.CreateurObjets;
-import model.Character;
-import model.ObjetDetectable;
+import view.Affichage;
 
 public class DetectionCollision extends Thread {
-
-    affichage a;
+    Affichage monAffichage;
     ObjetDetectable mainCharacter;
 
-    public DetectionCollision(affichage a, ObjetDetectable mainCharacter) {
-        this.a = a;
+    public DetectionCollision(Affichage monAffichage, ObjetDetectable mainCharacter) {
+        this.monAffichage = monAffichage;
         this.mainCharacter = mainCharacter;
     }
 
     @Override
     public void run() {
         while (true) {
+            synchronized (monAffichage) {
+                while (Affichage.PAUSE) { // Pause the thread
+                    try {
+                        monAffichage.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             try {
                 Thread.sleep(100);
                 for (int i = 0; i < 10; i++) {
-
                     if (CreateurObjets.objets[i] != null && CreateurObjets.objets[i].solidArea != null) {
                         CreateurObjets.objets[i].solidArea.setLocation(
                                 CreateurObjets.objets[i].getXpos(),
@@ -35,31 +38,25 @@ public class DetectionCollision extends Thread {
                         mainCharacter.solidArea.setLocation(mainCharacter.getXpos(), mainCharacter.getYpos());
                     }
 
-                    System.out.println("hacene Y pos : " + mainCharacter.getYpos());
-
                     if (mainCharacter != null && CreateurObjets.objets[i] != null) {
                         if (mainCharacter.solidArea.intersects(CreateurObjets.objets[i].solidArea)) {
                             System.out.println("Collision detected !");
-                            // afficher l'objet qui a été touché par hacene au début de l'horizon ( comme si
-                            // ça venait d'etre crée )
-                            // pas besoin d'etre supprimer !
+
+                            // je redissine l'objet touché au début de l'horizon je ne le supprime pas.
                             CreateurObjets.objets[i]
-                                    .setXpos(affichage.LARGEUR_ECRAN
+                                    .setXpos(Affichage.LARGEUR_ECRAN
                                             + CreateurObjets.RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
                             CreateurObjets.objets[i]
                                     .setYpos(CreateurObjets.RAND.nextInt(0, 10) * Position.TAILLE_CELLULE);
 
-                            /* augmenter le score de hacene */
                             Character temp = (Character) mainCharacter;
                             temp.incrScoreMario();
 
                             System.out.println("Score de hacene : " + temp.getScoreMario());
 
-                            /* afficher une sorte d'éclaire visuel au milieu de l'écran */
-                            a.drawYellowLine(a.getGraphics());
-                            Thread.sleep(100); // Show effect for 100ms
-                            a.drawWhiteLine(a.getGraphics());
-
+                            monAffichage.drawYellowLine(monAffichage.getGraphics());
+                            Thread.sleep(100); // pour voir la ligne jaune , sinon elle disparait trop vite
+                            monAffichage.drawWhiteLine(monAffichage.getGraphics());
                         }
                     }
                 }
@@ -71,9 +68,6 @@ public class DetectionCollision extends Thread {
 
     /* fonction : draw ; qui dessine toutes les tuiles */
     public void draw(Graphics2D g2) {
-        /*
-         * loop over the CreateurObjets.objets objects and call the draw image function
-         */
         for (int i = 0; i < 10; i++) {
             try {
                 CreateurObjets.objets[i].draw(g2);

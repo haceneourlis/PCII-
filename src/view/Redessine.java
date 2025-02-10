@@ -1,19 +1,28 @@
 package view;
 
 public class Redessine extends Thread {
-    affichage monAffichage;
+    Affichage monAffichage;
 
-    Redessine(affichage a) {
+    Redessine(Affichage a) {
         monAffichage = a;
     }
 
-    final int DELAY = 50;
+    final int DELAY = 16;
 
     @Override
     public void run() {
-
         while (true) {
-            monAffichage.repaint();
+            synchronized (monAffichage) {
+                while (Affichage.PAUSE) { // si le jeu est en pause
+                    try {
+                        monAffichage.wait(); // attendre
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            monAffichage.repaint(); // réafficher la frame (le panel)
             try {
                 Thread.sleep(DELAY);
             } catch (Exception e) {

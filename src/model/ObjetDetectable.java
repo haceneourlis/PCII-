@@ -31,9 +31,10 @@ public class ObjetDetectable extends Rectangle {
                 throw new IllegalArgumentException("Image not found: " + pathToImage);
             }
 
-            System.out.println("Image found: " + imgUrl);
+            // System.out.println("printing from the class ObjetDetectable");
+            // System.out.println("Image found: " + imgUrl);
             this.image = ImageIO.read(imgUrl);
-            System.out.println("Image successfully loaded: " + pathToImage);
+            // ystem.out.println("Image successfully loaded: " + pathToImage);
 
         } catch (IOException e) {
             e.printStackTrace();

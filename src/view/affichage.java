@@ -2,6 +2,11 @@ package view;
 
 import javax.swing.*;
 
+import controller.PauseMenuController;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import model.CreateurObjets;
 import model.ObjetDetectable;
 import model.Parcours;
@@ -9,7 +14,9 @@ import model.Position;
 
 import java.awt.*;
 
-public class affichage extends JPanel {
+public class Affichage extends JPanel implements KeyListener {
+
+    public static boolean PAUSE = false;
 
     public static final int RATIO_X = 2;
     public static final int RATIO_Y = 3;
@@ -19,44 +26,55 @@ public class affichage extends JPanel {
 
     public static final int POSITION_EN_X = (Position.BEFORE * RATIO_X) - Position.LARGEUR_CHARCTER / 2;
 
-    private Position pos_charcter;
+    private Position pos_character;
     private Parcours parcours;
     public CreateurObjets cb;
 
-    public affichage(Position pos, Parcours parcours) {
+    private PauseMenuController pauseMenuController;
+
+    public Affichage(Position pos, Parcours parcours) {
         super();
         this.parcours = parcours;
-        pos_charcter = pos;
-        this.cb = new CreateurObjets(pos_charcter);
+        pos_character = pos;
+        this.cb = new CreateurObjets(pos_character);
         this.cb.setObjects();
-        this.setPreferredSize(new Dimension((int) LARGEUR_ECRAN, (int) HAUTEUR_ECRAN));
+        this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
+
+        // pour que le panel soit focusable
+        this.setFocusable(true);
+        this.addKeyListener(this);
+
+        // ajouter un controller pour le menu pause
+        pauseMenuController = new PauseMenuController(this);
+
         (new Redessine(this)).start();
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        // int position_en_y = (Position.HAUTEUR_MAX - pos_oval.get_hauteur() -
-        // (Position.HAUTEUR_OVALE)) * RATIO_Y;
 
-        // l'oval ici c'est mario (le personnage)
-
-        cb.hacene
-                .setYpos(Position.HAUTEUR_MAX - pos_charcter.get_hauteur() - (Position.HAUTEUR_CHARACTER) * RATIO_Y);
-
-        // redessinner mario et les autres objets
-        draw_objets(g);
-        draw_Character(g);
-        draw_points(g);
-
-    }
-
-    private void draw_points(Graphics g) {
-        for (Point point : parcours.get_liste_points()) {
-            g.drawRect(point.x * RATIO_X, point.y * RATIO_Y, 10, 10);
+        if (!PAUSE) {
+            cb.hacene.setYpos(
+                    Position.HAUTEUR_MAX - pos_character.get_hauteur() - (Position.HAUTEUR_CHARACTER) * RATIO_Y);
+            draw_objets(g);
+            draw_Character(g);
+            draw_points(g);
+            drawScore(g);
+            cb.creer_new_objets();
         }
     }
 
+    /* affichage de points */
+    private void draw_points(Graphics g) {
+        for (Point point : parcours.get_liste_points()) {
+            /* afficher des points rond avec une vouleur rouge */
+            g.setColor(Color.RED);
+            g.fillOval(point.x * RATIO_X, HAUTEUR_ECRAN - point.y * RATIO_Y, 5, 5);
+        }
+    }
+
+    /* affichage des objets detectable : fruits et argent */
     private void draw_objets(Graphics g) {
         if (cb == null) {
             System.out.println("Warning: cb (CreateurObjets) is null in draw_objets()");
@@ -68,18 +86,51 @@ public class affichage extends JPanel {
         }
     }
 
+    /* affichage du personnage */
     private void draw_Character(Graphics g) {
-        cb.getMario().draw((Graphics2D) g);
+        cb.hacene.draw((Graphics2D) g);
     }
 
     public void drawYellowLine(Graphics g2) {
         g2.setColor(Color.YELLOW);
-        g2.drawLine(affichage.LARGEUR_ECRAN / 2, 0, affichage.LARGEUR_ECRAN / 2, affichage.HAUTEUR_ECRAN);
+        g2.drawLine(Affichage.LARGEUR_ECRAN / 2, 0, Affichage.LARGEUR_ECRAN / 2, Affichage.HAUTEUR_ECRAN);
     }
 
     public void drawWhiteLine(Graphics g2) {
         g2.setColor(Color.WHITE);
-        g2.drawLine(affichage.LARGEUR_ECRAN / 2, 0, affichage.LARGEUR_ECRAN / 2, affichage.HAUTEUR_ECRAN);
+        g2.drawLine(Affichage.LARGEUR_ECRAN / 2, 0, Affichage.LARGEUR_ECRAN / 2, Affichage.HAUTEUR_ECRAN);
     }
 
+    /* afficher le score actuel dans le TOP-LEFT , en grande polices */
+    public void drawScore(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score : " + cb.hacene.getScoreMario(), 10, 20);
+
+    }
+
+    /** Toggle PAUSE when ESC key is pressed */
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            synchronized (this) {
+                PAUSE = !PAUSE;
+                if (PAUSE) {
+                    pauseMenuController.showPauseMenu();
+                } else {
+                    pauseMenuController.hidePauseMenu();
+                    this.notifyAll(); // Resume all paused threads
+                }
+            }
+            repaint();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
 }

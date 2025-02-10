@@ -18,4 +18,7 @@ public class Character extends ObjetDetectable {
         return scoreMario;
     }
 
+    public void setScoreMario(int scoreMario) {
+        this.scoreMario = scoreMario;
+    }
 }
