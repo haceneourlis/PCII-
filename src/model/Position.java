@@ -25,12 +25,15 @@ public class Position extends Thread {
         this.GamePanel = GamePanel;
     }
 
+    public Affichage getGamePanel() {
+        return this.GamePanel;
+    }
+
     public static final int IMPULSION = 5;
-    public static final int HAUTEUR_OVALE = 30;
-    public static final int LARGEUR_OVALE = 10;
+    public static final int HAUTEUR_OVALE = 25;
 
     public int avancement = 5;
-    private int hauteur = HAUTEUR_MIN;
+    private int hauteur = HAUTEUR_MIN; // hauteur désigne la coordonnées en y du bas de l'ovale
     public double vitesseVerticale = 0;
 
     public int get_hauteur() {
@@ -38,14 +41,13 @@ public class Position extends Thread {
     }
 
     public void move() {
-        // peut etre que j'ai mal compris ?
-        if (hauteur < HAUTEUR_MIN - HAUTEUR_OVALE / 2) {
-            hauteur = HAUTEUR_MIN - HAUTEUR_OVALE / 2;
+        // je commence à mieux comprendre...
+        if (hauteur + vitesseVerticale < HAUTEUR_MIN) {
+            hauteur = HAUTEUR_MIN;
             vitesseVerticale = 0;
-
         }
-        if (hauteur > HAUTEUR_MAX - HAUTEUR_OVALE / 2) {
-            hauteur = HAUTEUR_MAX - HAUTEUR_OVALE / 2;
+        if (hauteur + vitesseVerticale > HAUTEUR_MAX - HAUTEUR_OVALE) {
+            hauteur = HAUTEUR_MAX - HAUTEUR_OVALE;
             vitesseVerticale = 0;
         } else {
             hauteur += (int) vitesseVerticale;
@@ -88,10 +90,12 @@ public class Position extends Thread {
 
             try {
                 // Pause de 100ms pour ralentir la mise à jour du jeu
-                Thread.sleep(64);
+                Thread.sleep(50);
 
                 // Met à jour la position des objets dans le jeu
                 parcouuuurs.update_ligne();
+                // avancement += 1;
+                GamePanel.revalidate();
                 GamePanel.repaint();
             } catch (Exception e) {
                 // Affiche toute erreur qui pourrait survenir

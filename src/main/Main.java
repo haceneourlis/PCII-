@@ -3,7 +3,6 @@ package main;
 import javax.swing.*;
 
 import controller.ReactionClic;
-import model.CreateurObjets;
 import model.Descendre;
 import model.DetectionCollision;
 import model.Parcours;
@@ -15,6 +14,8 @@ public class Main {
 
   /** La méthode de lancement du programme */
   public static void main(String[] args) {
+    Thread.currentThread().setPriority(1);
+
     JFrame maFenetre = new JFrame("Exercice 1");
 
     Parcours parcours = new Parcours();

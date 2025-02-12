@@ -7,7 +7,7 @@ public class Redessine extends Thread {
         monAffichage = a;
     }
 
-    final int DELAY = 16;
+    final int DELAY = 10;
 
     @Override
     public void run() {
@@ -22,8 +22,10 @@ public class Redessine extends Thread {
                 }
             }
 
+            monAffichage.revalidate();
             monAffichage.repaint(); // réafficher la frame (le panel)
             try {
+
                 Thread.sleep(DELAY);
             } catch (Exception e) {
                 e.printStackTrace();

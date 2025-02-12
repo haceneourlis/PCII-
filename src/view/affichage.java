@@ -24,6 +24,8 @@ public class Affichage extends JPanel implements KeyListener {
     public int LARGEUR_ECRAN = (Position.BEFORE + Position.AFTER) * RATIO_X;
     public int HAUTEUR_ECRAN = (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) * RATIO_Y;
 
+    public static final int LARGEUR_OVALE_VUE = 20;
+
     private Position pos_character;
     private Parcours parcours;
     public CreateurObjets cb;
@@ -54,17 +56,17 @@ public class Affichage extends JPanel implements KeyListener {
 
         if (!PAUSE) {
             this.updateRatios();
-            int yPos = (Position.HAUTEUR_MAX - pos_character.get_hauteur() - (Position.HAUTEUR_OVALE) / 2)
+            int yPos = (Position.HAUTEUR_MAX - pos_character.get_hauteur() - Position.HAUTEUR_OVALE)
                     * RATIO_Y;
-            int xPos = (Position.BEFORE * RATIO_X) - Position.LARGEUR_OVALE / 2;
+            int xPos = (Position.BEFORE * RATIO_X) - LARGEUR_OVALE_VUE / 2;
             CreateurObjets.ovaleDuJeu.setYpos(yPos);
             CreateurObjets.ovaleDuJeu.setXpos(xPos);
 
-            draw_objets(g);
-            draw_Ovale(g);
+            draw_Ovale(g, xPos, yPos);
             draw_points(g);
-            drawScore(g);
             draw_line(g);
+            draw_objets(g);
+            drawScore(g);
             cb.creer_new_objets();
         }
     }
@@ -120,9 +122,12 @@ public class Affichage extends JPanel implements KeyListener {
         }
     }
 
-    /* affichage du personnage */
-    private void draw_Ovale(Graphics g) {
-        CreateurObjets.ovaleDuJeu.draw((Graphics2D) g);
+    public void draw_Ovale(Graphics g, int x, int y) {
+        // Dessiner l'oval
+        g.setColor(Color.RED);
+        // g.fillOval(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE,
+        // Position.HAUTEUR_OVALE);
+        g.drawOval(x, y, LARGEUR_OVALE_VUE, Position.HAUTEUR_OVALE * RATIO_X);
     }
 
     /* afficher le score actuel dans le TOP-LEFT , en grande polices */

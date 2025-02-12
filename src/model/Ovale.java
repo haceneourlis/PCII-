@@ -5,15 +5,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import view.Affichage;
+
 public class Ovale extends ObjetDetectable {
 
     private int scoreGame = 0;
 
     public Ovale() {
         super();
-        this.solidArea = new Rectangle(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE, Position.HAUTEUR_OVALE); // Define
-                                                                                                                        // collision
-                                                                                                                        // area
+        this.solidArea = new Rectangle(this.getXpos(), this.getYpos(), Affichage.LARGEUR_OVALE_VUE,
+                Position.HAUTEUR_OVALE); // Define
+        // collision
+        // area
     }
 
     public void incrScore() {
@@ -29,19 +32,7 @@ public class Ovale extends ObjetDetectable {
     }
 
     public void setSolidArea() {
-        this.solidArea.setBounds(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE, Position.HAUTEUR_OVALE);
+        this.solidArea.setBounds(this.getXpos(), this.getYpos(), Affichage.LARGEUR_OVALE_VUE, Position.HAUTEUR_OVALE);
     }
 
-    @Override
-    public void draw(Graphics2D g2) {
-        // Dessiner l'oval
-        Graphics g = g2;
-        g.setColor(Color.RED);
-        g.fillOval(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE, Position.HAUTEUR_OVALE);
-
-        g.drawOval(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE, Position.HAUTEUR_OVALE);
-        // Dessiner la zone de collision opour debugger
-        g.setColor(Color.BLUE);
-        g.drawRect(solidArea.x, solidArea.y, solidArea.width, solidArea.height);
-    }
 }

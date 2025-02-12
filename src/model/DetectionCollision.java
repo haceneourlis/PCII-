@@ -25,7 +25,7 @@ public class DetectionCollision extends Thread {
             }
 
             try {
-                Thread.sleep(16);
+                Thread.sleep(1);
                 for (int i = 0; i < 10; i++) {
                     if (CreateurObjets.objets[i] != null && CreateurObjets.objets[i].solidArea != null) {
                         CreateurObjets.objets[i].setSolidArea();

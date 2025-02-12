@@ -53,6 +53,9 @@ public class Descendre extends Thread {
             try {
                 Thread.sleep(48);
                 p.move();
+
+                p.getGamePanel().revalidate();
+                p.getGamePanel().repaint();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

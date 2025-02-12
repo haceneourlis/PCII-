@@ -8,14 +8,14 @@ import view.Affichage;
 public class Parcours {
     java.util.Random rand = new java.util.Random();
     // reprise de l'algo du prof
-    private static final int XMIN = 100;
-    private static final int XMAX = 800;
+    public static final int XMIN = 100;
+    public static final int XMAX = 800;
 
-    private static final int XDEPART = 200;
-    private static final int YDEPART = 150;
+    public static final int XDEPART = 200;
+    public static final int YDEPART = 150;
 
-    private static final int ECARTMIN = 10;
-    private static final int ECARTMAX = 30;
+    public static final int ECARTMIN = 30;
+    public static final int ECARTMAX = 60;
 
     private Position position;
     private Affichage GamePanel;
@@ -49,7 +49,7 @@ public class Parcours {
         int x = XDEPART + ECARTMIN;
 
         while (x <= XMAX) {
-            x += rand.nextInt(ECARTMAX - ECARTMIN);
+            x += rand.nextInt(ECARTMAX - ECARTMIN) + ECARTMIN;
             int y = rand.nextInt(Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) + Position.HAUTEUR_MIN;
             listePoints.add(new Point(x, y));
         }
