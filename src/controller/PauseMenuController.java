@@ -1,6 +1,9 @@
 package controller;
 
 import javax.swing.*;
+
+import model.CreateurObjets;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -20,7 +23,7 @@ public class PauseMenuController implements MouseListener {
     private void setupPauseMenu() {
         pausePanel = new JPanel();
         pausePanel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
-        pausePanel.setBounds(Affichage.LARGEUR_ECRAN / 2 - 75, Affichage.HAUTEUR_ECRAN / 2 - 75, 150, 200);
+        pausePanel.setBounds(gamePanel.LARGEUR_ECRAN / 2 - 75, gamePanel.HAUTEUR_ECRAN / 2 - 75, 150, 200);
         pausePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black
 
         JLabel pauseLabel = new JLabel("Game Paused", SwingConstants.CENTER);
@@ -73,7 +76,7 @@ public class PauseMenuController implements MouseListener {
             Affichage.PAUSE = false;
             gamePanel.notifyAll(); // dire à tous les threads en pause de continuer
         }
-        gamePanel.cb.hacene.setScoreMario(0);
+        CreateurObjets.ovaleDuJeu.resetScore();
         gamePanel.cb.setObjects();
         hidePauseMenu();
         gamePanel.repaint();

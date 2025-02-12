@@ -3,14 +3,13 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import view.Affichage;
+
 public class Parcours {
     java.util.Random rand = new java.util.Random();
     // reprise de l'algo du prof
     private static final int XMIN = 100;
     private static final int XMAX = 800;
-
-    private static final int YMIN = 50;
-    private static final int YMAX = 300;
 
     private static final int XDEPART = 200;
     private static final int YDEPART = 150;
@@ -19,11 +18,17 @@ public class Parcours {
     private static final int ECARTMAX = 30;
 
     private Position position;
+    private Affichage GamePanel;
     private ArrayList<Point> listePoints;
 
     public Parcours() {
         listePoints = new ArrayList<Point>();
         generer_points();
+    }
+
+    /* set game panel */
+    public void setGamePanel(Affichage GamePanel) {
+        this.GamePanel = GamePanel;
     }
 
     /* set the position */
@@ -45,7 +50,7 @@ public class Parcours {
 
         while (x <= XMAX) {
             x += rand.nextInt(ECARTMAX - ECARTMIN);
-            int y = rand.nextInt(YMAX - YMIN);
+            int y = rand.nextInt(Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) + Position.HAUTEUR_MIN;
             listePoints.add(new Point(x, y));
         }
     }
@@ -68,9 +73,9 @@ public class Parcours {
 
         // Ajouter un nouveau point si le dernier est proche de l'horizon
         Point dernierPoint = listePoints.get(listePoints.size() - 1);
-        if (dernierPoint.x - position.avancement < Position.AFTER) {
+        if (dernierPoint.x - position.avancement < GamePanel.LARGEUR_ECRAN) {
             int x = dernierPoint.x + rand.nextInt(ECARTMAX - ECARTMIN);
-            int y = rand.nextInt(YMAX - YMIN);
+            int y = rand.nextInt(Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) + Position.HAUTEUR_MIN;
             listePoints.add(new Point(x, y));
         }
     }

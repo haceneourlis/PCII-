@@ -1,7 +1,9 @@
 package model;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -17,8 +19,18 @@ public class ObjetDetectable extends Rectangle {
     // détecter les
     // collisions .
 
+    private Position position;
+
     public ObjetDetectable() {
+    }
+
+    public ObjetDetectable(Position position) {
         super();
+        this.position = position;
+    }
+
+    public void setSolidArea() {
+        this.solidArea.setBounds(this.getXpos(), this.getYpos(), Position.TAILLE_CELLULE, Position.TAILLE_CELLULE);
     }
 
     public void setImage(String pathToImage) {
@@ -59,7 +71,9 @@ public class ObjetDetectable extends Rectangle {
 
     public void draw(Graphics2D g2) {
         try {
-            g2.drawImage(this.image, this.xpos, this.ypos, TAILLE_CELLULE, TAILLE_CELLULE, null);
+            Point p = new Point(this.getXpos(), this.getYpos());
+            p = position.transformToView(p);
+            g2.drawImage(this.image, p.x, p.y, TAILLE_CELLULE, TAILLE_CELLULE, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

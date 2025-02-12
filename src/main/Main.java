@@ -3,6 +3,7 @@ package main;
 import javax.swing.*;
 
 import controller.ReactionClic;
+import model.CreateurObjets;
 import model.Descendre;
 import model.DetectionCollision;
 import model.Parcours;
@@ -21,6 +22,8 @@ public class Main {
     parcours.set_position(pp);
     Affichage GamePanel = new Affichage(pp, parcours);
     pp.setGamePanel(GamePanel);
+    parcours.setGamePanel(GamePanel);
+
     ReactionClic rc = new ReactionClic(pp);
 
     /* lancer les thread */
@@ -29,7 +32,7 @@ public class Main {
     // parcours )
     pp.start();
     // le 4eme thread : pour detecter les collisions ( Classe Rectangle )
-    (new DetectionCollision(GamePanel, GamePanel.cb.hacene)).start();
+    (new DetectionCollision(GamePanel)).start();
 
     GamePanel.addMouseListener(rc);
     maFenetre.add(GamePanel);

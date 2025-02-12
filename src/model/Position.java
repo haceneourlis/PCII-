@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.Point;
+
 import view.Affichage;
 
 public class Position extends Thread {
@@ -7,7 +9,7 @@ public class Position extends Thread {
     public static final int BEFORE = 100;
     public static final int AFTER = 300;
 
-    public static final int HAUTEUR_MIN = -50;
+    public static final int HAUTEUR_MIN = -20;
     public static final int HAUTEUR_MAX = 50;
 
     private Parcours parcouuuurs;
@@ -23,12 +25,12 @@ public class Position extends Thread {
         this.GamePanel = GamePanel;
     }
 
-    public static final int IMPULSION = 10;
-    public static final int HAUTEUR_CHARACTER = 50;
-    public static final int LARGEUR_CHARCTER = 10;
+    public static final int IMPULSION = 5;
+    public static final int HAUTEUR_OVALE = 30;
+    public static final int LARGEUR_OVALE = 10;
 
     public int avancement = 5;
-    private int hauteur = 0;
+    private int hauteur = HAUTEUR_MIN;
     public double vitesseVerticale = 0;
 
     public int get_hauteur() {
@@ -36,12 +38,31 @@ public class Position extends Thread {
     }
 
     public void move() {
-        hauteur += (int) vitesseVerticale;
-        vitesseVerticale -= 0.5;
+        // peut etre que j'ai mal compris ?
+        if (hauteur < HAUTEUR_MIN - HAUTEUR_OVALE / 2) {
+            hauteur = HAUTEUR_MIN - HAUTEUR_OVALE / 2;
+            vitesseVerticale = 0;
+
+        }
+        if (hauteur > HAUTEUR_MAX - HAUTEUR_OVALE / 2) {
+            hauteur = HAUTEUR_MAX - HAUTEUR_OVALE / 2;
+            vitesseVerticale = 0;
+        } else {
+            hauteur += (int) vitesseVerticale;
+            vitesseVerticale -= 0.5;
+        }
+
     }
 
     public void jump() {
         vitesseVerticale = IMPULSION;
+    }
+
+    /* une fonction qui transforme chaque point du model en un point de la vue */
+    public Point transformToView(Point modelPoint) {
+        int xView = modelPoint.x * GamePanel.RATIO_X;
+        int yView = (Position.HAUTEUR_MAX - modelPoint.y) * GamePanel.RATIO_Y;
+        return new Point(xView, yView);
     }
 
     @Override
@@ -67,13 +88,11 @@ public class Position extends Thread {
 
             try {
                 // Pause de 100ms pour ralentir la mise à jour du jeu
-                Thread.sleep(100);
-
-                // Vérifie que ce bloc de code est bien exécuté
-                System.out.println(" so you do enter this block ( Position ) ? ");
+                Thread.sleep(64);
 
                 // Met à jour la position des objets dans le jeu
                 parcouuuurs.update_ligne();
+                GamePanel.repaint();
             } catch (Exception e) {
                 // Affiche toute erreur qui pourrait survenir
                 e.printStackTrace();

@@ -18,13 +18,11 @@ public class Affichage extends JPanel implements KeyListener {
 
     public static boolean PAUSE = false;
 
-    public static final int RATIO_X = 2;
-    public static final int RATIO_Y = 3;
+    public int RATIO_X = 2;
+    public int RATIO_Y = 3;
 
-    public static final int LARGEUR_ECRAN = (Position.BEFORE + Position.AFTER) * RATIO_X;
-    public static final int HAUTEUR_ECRAN = (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) * RATIO_Y;
-
-    public static final int POSITION_EN_X = (Position.BEFORE * RATIO_X) - Position.LARGEUR_CHARCTER / 2;
+    public int LARGEUR_ECRAN = (Position.BEFORE + Position.AFTER) * RATIO_X;
+    public int HAUTEUR_ECRAN = (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) * RATIO_Y;
 
     private Position pos_character;
     private Parcours parcours;
@@ -55,13 +53,43 @@ public class Affichage extends JPanel implements KeyListener {
         super.paint(g);
 
         if (!PAUSE) {
-            cb.hacene.setYpos(
-                    Position.HAUTEUR_MAX - pos_character.get_hauteur() - (Position.HAUTEUR_CHARACTER) * RATIO_Y);
+            this.updateRatios();
+            int yPos = (Position.HAUTEUR_MAX - pos_character.get_hauteur() - (Position.HAUTEUR_OVALE) / 2)
+                    * RATIO_Y;
+            int xPos = (Position.BEFORE * RATIO_X) - Position.LARGEUR_OVALE / 2;
+            CreateurObjets.ovaleDuJeu.setYpos(yPos);
+            CreateurObjets.ovaleDuJeu.setXpos(xPos);
+
             draw_objets(g);
-            draw_Character(g);
+            draw_Ovale(g);
             draw_points(g);
             drawScore(g);
+            draw_line(g);
             cb.creer_new_objets();
+        }
+    }
+
+    /*
+     * affichage d'une ligne tout au long de la fenetre en reliant les points deux
+     * par deux
+     */
+    /*
+     * affichage d'une ligne tout au long de la fenetre en reliant les points deux
+     * par deux
+     */
+    private void draw_line(Graphics g) {
+        synchronized (parcours) {
+            g.setColor(Color.BLUE); // Choose a color for the line
+
+            java.util.List<Point> points = parcours.get_liste_points();
+            for (int i = 0; i < points.size() - 1; i++) {
+                Point p1 = points.get(i);
+                Point p2 = points.get(i + 1);
+
+                p1 = pos_character.transformToView(p1);
+                p2 = pos_character.transformToView(p2);
+                g.drawLine(p1.x, p1.y, p2.x, p2.y);
+            }
         }
     }
 
@@ -74,7 +102,8 @@ public class Affichage extends JPanel implements KeyListener {
             for (Point point : parcours.get_liste_points()) {
                 /* afficher des points rond avec une vouleur rouge */
                 g.setColor(Color.RED);
-                g.fillOval(point.x * RATIO_X, HAUTEUR_ECRAN - point.y * RATIO_Y, 5, 5);
+                Point new_point_vue = pos_character.transformToView(point);
+                g.fillOval(new_point_vue.x, new_point_vue.y, 5, 5);
             }
         }
     }
@@ -92,26 +121,33 @@ public class Affichage extends JPanel implements KeyListener {
     }
 
     /* affichage du personnage */
-    private void draw_Character(Graphics g) {
-        cb.hacene.draw((Graphics2D) g);
-    }
-
-    public void drawYellowLine(Graphics g2) {
-        g2.setColor(Color.YELLOW);
-        g2.drawLine(Affichage.LARGEUR_ECRAN / 2, 0, Affichage.LARGEUR_ECRAN / 2, Affichage.HAUTEUR_ECRAN);
-    }
-
-    public void drawWhiteLine(Graphics g2) {
-        g2.setColor(Color.WHITE);
-        g2.drawLine(Affichage.LARGEUR_ECRAN / 2, 0, Affichage.LARGEUR_ECRAN / 2, Affichage.HAUTEUR_ECRAN);
+    private void draw_Ovale(Graphics g) {
+        CreateurObjets.ovaleDuJeu.draw((Graphics2D) g);
     }
 
     /* afficher le score actuel dans le TOP-LEFT , en grande polices */
     public void drawScore(Graphics g) {
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Score : " + cb.hacene.getScoreMario(), 10, 20);
+        g.drawString("Score : " + CreateurObjets.ovaleDuJeu.getScore(), 10, 20);
 
+    }
+
+    /* exercice 2 */
+    /* Get the current width of the game panel */
+    public int getLargeurEcran() {
+        return getWidth(); // Dynamically get panel width
+    }
+
+    /* Get the current height of the game panel */
+    public int getHauteurEcran() {
+        return getHeight(); // Dynamically get panel height
+    }
+
+    /* Update RATIO_X and RATIO_Y dynamically */
+    private void updateRatios() {
+        RATIO_X = getLargeurEcran() / (Position.BEFORE + Position.AFTER);
+        RATIO_Y = getHauteurEcran() / (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN);
     }
 
     /** Toggle PAUSE when ESC key is pressed */

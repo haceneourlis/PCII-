@@ -51,8 +51,8 @@ public class Descendre extends Thread {
             }
 
             try {
-                Thread.sleep(32);
-                p.move(); // Move character downward
+                Thread.sleep(48);
+                p.move();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
