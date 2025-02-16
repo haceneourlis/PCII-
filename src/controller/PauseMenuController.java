@@ -23,7 +23,7 @@ public class PauseMenuController implements MouseListener {
     private void setupPauseMenu() {
         pausePanel = new JPanel();
         pausePanel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
-        pausePanel.setBounds(gamePanel.LARGEUR_ECRAN / 2 - 75, gamePanel.HAUTEUR_ECRAN / 2 - 75, 150, 200);
+        pausePanel.setBounds(gamePanel.getWidth() / 2 - 75, gamePanel.getHeight() / 2 - 75, 150, 200);
         pausePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black
 
         JLabel pauseLabel = new JLabel("Game Paused", SwingConstants.CENTER);
@@ -46,8 +46,11 @@ public class PauseMenuController implements MouseListener {
         pausePanel.add(quitter);
 
         pausePanel.setVisible(false); // au début le panel est caché
-        gamePanel.setLayout(null); // Set layout to null to use absolute positioning : github copilot suggestion .
         gamePanel.add(pausePanel); // Add pause panel to game panel (Affichage)
+
+        // set the panel to be in the middle of the frame
+        pausePanel.setLocation((gamePanel.getWidth() - pausePanel.getWidth()) / 2,
+                (gamePanel.getHeight() - pausePanel.getHeight()) / 2);
     }
 
     /** Show Pause Menu */

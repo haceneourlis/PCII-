@@ -7,15 +7,14 @@ import view.Affichage;
 
 public class Parcours {
     java.util.Random rand = new java.util.Random();
-    // reprise de l'algo du prof
-    public static final int XMIN = 100;
-    public static final int XMAX = 800;
+
+    public static final int NOMBRE_MAX = 40;
 
     public static final int XDEPART = 200;
     public static final int YDEPART = 150;
 
-    public static final int ECARTMIN = 30;
-    public static final int ECARTMAX = 60;
+    public static final int ECARTMIN = 50;
+    public static final int ECARTMAX = 200;
 
     private Position position;
     private Affichage GamePanel;
@@ -44,13 +43,18 @@ public class Parcours {
      */
 
     private void generer_points() {
-        listePoints.add(new Point(XMIN - 1, YDEPART));
+        listePoints.add(new Point(Position.BEFORE - 1, YDEPART));
         listePoints.add(new Point(XDEPART + 50, YDEPART));
         int x = XDEPART + ECARTMIN;
+        int y = YDEPART; // Garder une hauteur initiale stable
 
-        while (x <= XMAX) {
+        while (x <= NOMBRE_MAX) {
             x += rand.nextInt(ECARTMAX - ECARTMIN) + ECARTMIN;
-            int y = rand.nextInt(Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) + Position.HAUTEUR_MIN;
+
+            // Limiter la variation de hauteur entre les points consécutifs
+            int deltaY = rand.nextInt(15) - 7; // Change la hauteur de manière plus progressive
+            y = Math.max(Position.HAUTEUR_MIN, Math.min(Position.HAUTEUR_MAX, y + deltaY));
+
             listePoints.add(new Point(x, y));
         }
     }
@@ -73,8 +77,8 @@ public class Parcours {
 
         // Ajouter un nouveau point si le dernier est proche de l'horizon
         Point dernierPoint = listePoints.get(listePoints.size() - 1);
-        if (dernierPoint.x - position.avancement < GamePanel.LARGEUR_ECRAN) {
-            int x = dernierPoint.x + rand.nextInt(ECARTMAX - ECARTMIN);
+        if (dernierPoint.x - position.avancement < (Position.BEFORE + Position.AFTER) * GamePanel.ratio_X) {
+            int x = dernierPoint.x + rand.nextInt(ECARTMAX - ECARTMIN) + ECARTMIN;
             int y = rand.nextInt(Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) + Position.HAUTEUR_MIN;
             listePoints.add(new Point(x, y));
         }

@@ -18,11 +18,11 @@ public class Affichage extends JPanel implements KeyListener {
 
     public static boolean PAUSE = false;
 
-    public int RATIO_X = 2;
-    public int RATIO_Y = 3;
+    public int ratio_X = 2;
+    public int ratio_y = 3;
 
-    public int LARGEUR_ECRAN = (Position.BEFORE + Position.AFTER) * RATIO_X;
-    public int HAUTEUR_ECRAN = (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) * RATIO_Y;
+    public int LargeurEcran = (Position.BEFORE + Position.AFTER) * ratio_X;
+    public int HauteurEcran = (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN) * ratio_y;
 
     public static final int LARGEUR_OVALE_VUE = 20;
 
@@ -38,7 +38,7 @@ public class Affichage extends JPanel implements KeyListener {
         pos_character = pos;
         this.cb = new CreateurObjets(pos_character);
         this.cb.setObjects();
-        this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
+        this.setPreferredSize(new Dimension(LargeurEcran, HauteurEcran));
 
         // pour que le panel soit focusable
         this.setFocusable(true);
@@ -56,9 +56,8 @@ public class Affichage extends JPanel implements KeyListener {
 
         if (!PAUSE) {
             this.updateRatios();
-            int yPos = (Position.HAUTEUR_MAX - pos_character.get_hauteur() - Position.HAUTEUR_OVALE)
-                    * RATIO_Y;
-            int xPos = (Position.BEFORE * RATIO_X) - LARGEUR_OVALE_VUE / 2;
+            int yPos = (Position.HAUTEUR_MAX - pos_character.get_hauteur() - Position.HAUTEUR_OVALE) * ratio_y;
+            int xPos = (Position.BEFORE * ratio_X) - LARGEUR_OVALE_VUE / 2;
             CreateurObjets.ovaleDuJeu.setYpos(yPos);
             CreateurObjets.ovaleDuJeu.setXpos(xPos);
 
@@ -127,7 +126,7 @@ public class Affichage extends JPanel implements KeyListener {
         g.setColor(Color.RED);
         // g.fillOval(this.getXpos(), this.getYpos(), Position.LARGEUR_OVALE,
         // Position.HAUTEUR_OVALE);
-        g.drawOval(x, y, LARGEUR_OVALE_VUE, Position.HAUTEUR_OVALE * RATIO_X);
+        g.drawOval(x, y, LARGEUR_OVALE_VUE, Position.HAUTEUR_OVALE * ratio_X);
     }
 
     /* afficher le score actuel dans le TOP-LEFT , en grande polices */
@@ -139,20 +138,18 @@ public class Affichage extends JPanel implements KeyListener {
     }
 
     /* exercice 2 */
-    /* Get the current width of the game panel */
     public int getLargeurEcran() {
-        return getWidth(); // Dynamically get panel width
+        return getWidth();
     }
 
-    /* Get the current height of the game panel */
     public int getHauteurEcran() {
-        return getHeight(); // Dynamically get panel height
+        return getHeight();
     }
 
     /* Update RATIO_X and RATIO_Y dynamically */
     private void updateRatios() {
-        RATIO_X = getLargeurEcran() / (Position.BEFORE + Position.AFTER);
-        RATIO_Y = getHauteurEcran() / (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN);
+        ratio_X = (int) (getLargeurEcran() / (Position.BEFORE + Position.AFTER));
+        ratio_y = (int) (getHauteurEcran() / (Position.HAUTEUR_MAX - Position.HAUTEUR_MIN));
     }
 
     /** Toggle PAUSE when ESC key is pressed */

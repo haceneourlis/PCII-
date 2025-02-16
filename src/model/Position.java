@@ -29,10 +29,10 @@ public class Position extends Thread {
         return this.GamePanel;
     }
 
-    public static final int IMPULSION = 5;
-    public static final int HAUTEUR_OVALE = 25;
+    public static final int IMPULSION = 3;
+    public static final int HAUTEUR_OVALE = 20;
 
-    public int avancement = 5;
+    public int avancement = 1;
     private int hauteur = HAUTEUR_MIN; // hauteur désigne la coordonnées en y du bas de l'ovale
     public double vitesseVerticale = 0;
 
@@ -51,7 +51,7 @@ public class Position extends Thread {
             vitesseVerticale = 0;
         } else {
             hauteur += (int) vitesseVerticale;
-            vitesseVerticale -= 0.5;
+            vitesseVerticale -= 0.8;
         }
 
     }
@@ -62,8 +62,8 @@ public class Position extends Thread {
 
     /* une fonction qui transforme chaque point du model en un point de la vue */
     public Point transformToView(Point modelPoint) {
-        int xView = modelPoint.x * GamePanel.RATIO_X;
-        int yView = (Position.HAUTEUR_MAX - modelPoint.y) * GamePanel.RATIO_Y;
+        int xView = modelPoint.x * GamePanel.ratio_X;
+        int yView = (Position.HAUTEUR_MAX - modelPoint.y) * GamePanel.ratio_y;
         return new Point(xView, yView);
     }
 
@@ -90,7 +90,7 @@ public class Position extends Thread {
 
             try {
                 // Pause de 100ms pour ralentir la mise à jour du jeu
-                Thread.sleep(50);
+                Thread.sleep(32);
 
                 // Met à jour la position des objets dans le jeu
                 parcouuuurs.update_ligne();

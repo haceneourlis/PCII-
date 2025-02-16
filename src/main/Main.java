@@ -33,7 +33,7 @@ public class Main {
     // parcours )
     pp.start();
     // le 4eme thread : pour detecter les collisions ( Classe Rectangle )
-    (new DetectionCollision(GamePanel)).start();
+    (new DetectionCollision(GamePanel, parcours)).start();
 
     GamePanel.addMouseListener(rc);
     maFenetre.add(GamePanel);
